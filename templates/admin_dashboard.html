@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - ParkingPro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/admin_bg.jpg") }}');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #fff;
+        }
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .container-bg {
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        .table, .table th, .table td {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        label {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark px-3">
+    <a class="navbar-brand" href="#">ParkingPro Admin</a>
+    <div class="collapse navbar-collapse justify-content-end">
+        <a href="{{ url_for('controller.logout') }}" class="btn btn-outline-light">Logout</a>
+    </div>
+</nav>
+
+<!-- Admin Dashboard -->
+<div class="container container-bg">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <!-- Parking Lot Statistics -->
+    <div class="row mb-4 text-center">
+        <div class="col-md-4">
+            <h5>Total Lots: {{ lots|length }}</h5>
+        </div>
+        <div class="col-md-4">
+            <h5>Total Users: {{ users|length }}</h5>
+        </div>
+        <div class="col-md-4">
+            <h5>Total Spots: {{ available_spots|sum + occupied_spots|sum }}</h5>
+        </div>
+    </div>
+
+    <!-- Parking Lot Details -->
+    <h4 class="mt-4">Parking Lots</h4>
+    {% for lot in lots %}
+    <div class="border rounded p-3 mb-3 bg-dark text-white">
+        <h5>{{ lot.name }} (Pincode: {{ lot.pincode }})</h5>
+        <p>Address: {{ lot.address }}</p>
+        <p>Price per hour: ₹{{ lot.price }}</p>
+        <p>Total Spots: {{ lot.total_spots }}</p>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('controller.edit_lot', lot_id=lot.id) }}" class="btn btn-warning btn-sm me-2">Edit Lot</a>
+            <a href="{{ url_for('controller.delete_lot', lot_id=lot.id) }}" class="btn btn-danger btn-sm me-2">Delete Lot</a>
+            <a href="{{ url_for('controller.add_spots', lot_id=lot.id) }}" class="btn btn-success btn-sm">Update Spots</a>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Add New Lot Form -->
+    <h4 class="mt-5">Add New Parking Lot</h4>
+    <form method="POST" action="{{ url_for('controller.add_lot') }}" class="row g-3">
+        <div class="col-md-6">
+            <label for="name">Lot Name</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+            <label for="address">Address</label>
+            <input type="text" name="address" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label for="pincode">Pincode</label>
+            <input type="text" name="pincode" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label for="price">Price/hour (₹)</label>
+            <input type="number" name="price" class="form-control" step="0.1" required>
+        </div>
+        <div class="col-md-4">
+            <label for="total_spots">Total Spots</label>
+            <input type="number" name="total_spots" class="form-control" required>
+        </div>
+        <div class="col-12 text-center mt-3">
+            <button type="submit" class="btn btn-primary">Add Parking Lot</button>
+        </div>
+    </form>
+
+    <!-- Registered Users Table -->
+    <h4 class="mt-5">Registered Users</h4>
+    <table class="table table-striped table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.role }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

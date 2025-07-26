@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/user_bg.jpg") }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+        }
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .card, .alert {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: #fff;
+        }
+        .btn-lg {
+            font-size: 1.3rem;
+            border-radius: 12px;
+        }
+        .info-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark px-3">
+    <a class="navbar-brand" href="#">ParkingPro</a>
+    <div class="collapse navbar-collapse justify-content-end">
+        <a href="{{ url_for('controller.logout') }}" class="btn btn-outline-light">Logout</a>
+    </div>
+</nav>
+
+<!-- Dashboard -->
+<div class="container py-5">
+    <h2 class="text-center mb-4">Welcome, {{ user.username }}!</h2>
+
+    <!-- Active Spot Section -->
+    {% if active_reservation %}
+    <div class="alert alert-success p-4">
+        <h4 class="text-center text-dark mb-3">Active Reservation</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <p><span class="info-label">Lot Name:</span> {{ active_reservation.spot.lot.name }}</p>
+                <p><span class="info-label">Spot Number:</span> {{ active_reservation.spot.spot_number }}</p>
+                <p><span class="info-label">Address:</span> {{ active_reservation.spot.lot.address }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><span class="info-label">User:</span> {{ user.username }}</p>
+                <p><span class="info-label">Booking Time:</span> {{ active_reservation.start_time.strftime('%Y-%m-%d %H:%M') }}</p>
+                <form method="POST" action="{{ url_for('controller.release_spot') }}" onsubmit="return confirm('Are you sure you want to release this spot?');">
+                    <input type="hidden" name="reservation_id" value="{{ active_reservation.id }}">
+                    <button type="submit" class="btn btn-danger btn-sm mt-2">Release Spot</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-dark text-center">
+        You have no active reservations.
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="row justify-content-center g-4 mt-5">
+        <div class="col-md-3 text-center">
+            <a href="{{ url_for('controller.book_parking') }}" class="btn btn-primary btn-lg w-100 py-4">
+                Book Parking
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="{{ url_for('controller.user_summary') }}" class="btn btn-success btn-lg w-100 py-4">
+                View Summary
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="{{ url_for('controller.user_history') }}" class="btn btn-info btn-lg w-100 py-4">
+                History
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

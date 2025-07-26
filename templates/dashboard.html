@@ -1,0 +1,62 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Welcome to Your Dashboard</h2>
+
+    <div class="row mb-4 text-center">
+        <div class="col-md-4">
+            <div class="card border-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Spots</h5>
+                    <p class="card-text display-6">{{ total_spots }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Occupied Spots</h5>
+                    <p class="card-text display-6">{{ occupied_spots }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Available Spots</h5>
+                    <p class="card-text display-6">{{ available_spots }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Current Reservations:</h4>
+    {% if reservations %}
+        <ul class="list-group">
+        {% for r in reservations %}
+            <li class="list-group-item">
+                Spot ID: {{ r.spot.id }} | Lot: {{ r.spot.lot.name }} | Start: {{ r.start_time }}
+                <a href="{{ url_for('controller.release_spot', reservation_id=r.id) }}" class="btn btn-danger btn-sm float-end">Release</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No active reservations.</p>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{{ url_for('controller.book_parking') }}" class="btn btn-success">Book Parking</a>
+        <a href="{{ url_for('controller.user_summary') }}" class="btn btn-info">Summary</a>
+        <a href="{{ url_for('controller.user_history') }}" class="btn btn-secondary">History</a>
+        <a href="{{ url_for('controller.logout') }}" class="btn btn-outline-dark">Logout</a>
+    </div>
+</div>
+</body>
+</html>

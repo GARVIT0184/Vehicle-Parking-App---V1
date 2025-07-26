@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Parking History</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Your Parking History</h2>
+    {% if reservations %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Lot</th>
+                    <th>Spot ID</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Cost (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in reservations %}
+                <tr>
+                    <td>{{ res.spot.lot.name }}</td>
+                    <td>{{ res.spot.id }}</td>
+                    <td>{{ res.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if res.end_time %}
+                            {{ res.end_time.strftime('%Y-%m-%d %H:%M') }}
+                        {% else %}
+                            <span class="text-warning">Ongoing</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if res.cost %}
+                            ₹{{ res.cost }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No reservations found.</p>
+    {% endif %}
+</div>
+</body>
+</html>
