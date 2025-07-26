@@ -3,46 +3,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login to ParkingPro</title>
+    <title>Login | ParkingPro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/static/images/parking_bg.jpg'); /* Add your image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+        }
+        .login-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            margin-top: 10%;
+        }
+    </style>
 </head>
-<body style="background-color: #f4f4f4;">
-    <div class="container mt-5">
-        <div class="col-md-6 offset-md-3 p-4 bg-white rounded shadow">
-            <h2 class="mb-4 text-center">Login to ParkingPro</h2>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 login-box">
+                <h2 class="text-center mb-4">Login to <strong>ParkingPro</strong></h2>
 
-            <!-- Display error if login fails -->
-            {% if error %}
-                <div class="alert alert-danger text-center">{{ error }}</div>
-            {% endif %}
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                          {{ message }}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
 
-            <form method="POST" action="{{ url_for('controller.login') }}">
-  <div class="mb-3">
-    <label for="username">Username</label>
-    <input type="text" name="username" class="form-control" required>
-  </div>
+                <form method="POST" action="{{ url_for('controller.login') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
 
-  <div class="mb-3">
-    <label for="password">Password</label>
-    <input type="password" name="password" class="form-control" required>
-  </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
 
-  <div class="mb-3">
-    <label for="role">Login as</label>
-    <select name="role" class="form-control" required>
-      <option value="admin">Admin</option>
-      <option value="user">User</option>
-    </select>
-  </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Login as</label>
+                        <select name="role" class="form-control" required>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                    </div>
 
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
 
-
-            <p class="mt-3 text-center">
-                Don't have an account? <a href="{{ url_for('controller.register') }}">Register here</a>
-            </p>
+                <p class="mt-3 text-center">
+                    Don’t have an account? 
+                    <a href="{{ url_for('controller.register') }}">Register here</a>
+                </p>
+            </div>
         </div>
     </div>
+
+    <!-- Bootstrap JS (for dismissible alerts) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

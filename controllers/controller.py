@@ -36,25 +36,29 @@ def register():
 @controller_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        uname = request.form['username']
-        pwd = request.form['password']
-        role = request.form['role']
+        username = request.form['username']
+        password = request.form['password']
 
-        user = User.query.filter_by(username=uname, role=role).first()
+        user = User.query.filter_by(username=username).first()
 
-        if user and check_password_hash(user.password, pwd):
+        if not user:
+            flash("User does not exist. Please register first.", "danger")
+            return redirect(url_for('controller.register'))
+
+        if check_password_hash(user.password, password):
             session['user_id'] = user.id
-            session['role'] = user.role
             session['username'] = user.username
-            if role == 'admin':
+            session['role'] = user.role
+
+            if user.role == 'admin':
                 return redirect(url_for('controller.admin_dashboard'))
             else:
                 return redirect(url_for('controller.user_dashboard'))
         else:
-            return render_template('login.html', error="Invalid credentials or role")
+            flash("Incorrect password. Please try again.", "danger")
+            return redirect(url_for('controller.login'))
 
     return render_template('login.html')
-
 # ------------------ Logout ------------------
 @controller_bp.route('/logout')
 def logout():
