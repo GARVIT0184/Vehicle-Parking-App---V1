@@ -6,17 +6,17 @@ from werkzeug.security import generate_password_hash
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Secret key for sessions
 
-# ---------------------- Database Configuration ----------------------
+# Database Configuration 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///parking.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# ---------------------- Initialize DB ----------------------
+# Initialize DB
 db.init_app(app)
 
-# ---------------------- Register Blueprints ----------------------
+#  Register Blueprints 
 app.register_blueprint(controller_bp)
 
-# ---------------------- Create DB Tables and Default Admin ----------------------
+#  Create DB Tables and Default Admin
 with app.app_context():
     db.create_all()
 
@@ -33,6 +33,6 @@ with app.app_context():
     else:
         print("ℹ️ Admin user already exists.")
 
-# ---------------------- Run the App ----------------------
+#  Run the App 
 if __name__ == '__main__':
     app.run(debug=True)
