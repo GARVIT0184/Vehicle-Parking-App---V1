@@ -6,12 +6,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 controller_bp = Blueprint('controller', __name__)
 
-# ------------------ Home ------------------
+#  Home 
 @controller_bp.route('/')
 def home():
     return render_template('index.html')
 
-# ------------------ Register ------------------
+#  Register 
 @controller_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -32,7 +32,7 @@ def register():
 
     return render_template('register.html')
 
-# ------------------ Login ------------------
+#  Login 
 @controller_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -59,13 +59,13 @@ def login():
             return redirect(url_for('controller.login'))
 
     return render_template('login.html')
-# ------------------ Logout ------------------
+#  Logout 
 @controller_bp.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('controller.home'))
 
-# ------------------ Admin Dashboard ------------------
+#  Admin Dashboard 
 @controller_bp.route('/admin_dashboard')
 def admin_dashboard():
     if 'role' not in session or session['role'] != 'admin':
@@ -91,7 +91,7 @@ def admin_dashboard():
                            available_spots=available_spots,
                            occupied_spots=occupied_spots)
 
-# ------------------ Add Parking Lot ------------------
+#  Add Parking Lot 
 @controller_bp.route('/add_lot', methods=['GET', 'POST'])
 def add_lot():
     if 'role' not in session or session['role'] != 'admin':
@@ -117,7 +117,7 @@ def add_lot():
 
     return render_template('add_lot.html')
 
-# ------------------ Edit Parking Lot ------------------
+#  Edit Parking Lot 
 @controller_bp.route('/edit_lot/<int:lot_id>', methods=['GET', 'POST'])
 def edit_lot(lot_id):
     if 'role' not in session or session['role'] != 'admin':
@@ -135,7 +135,7 @@ def edit_lot(lot_id):
 
     return render_template('edit_lot.html', lot=lot)
 
-# ------------------ Delete Parking Lot ------------------
+# Delete Parking Lot
 @controller_bp.route('/delete_lot/<int:lot_id>')
 def delete_lot(lot_id):
     if 'role' not in session or session['role'] != 'admin':
@@ -153,7 +153,7 @@ def delete_lot(lot_id):
     db.session.commit()
     return redirect(url_for('controller.admin_dashboard'))
 
-# ------------------ User Dashboard ------------------
+#  User Dashboard 
 @controller_bp.route('/dashboard')
 def user_dashboard():
     if 'role' not in session or session['role'] != 'user':
@@ -168,7 +168,7 @@ def user_dashboard():
                            user=user,
                            active_reservation=active_reservation)
 
-# ------------------ Book Parking ------------------
+#  Book Parking 
 @controller_bp.route('/book_parking', methods=['GET', 'POST'])
 def book_parking():
     if 'role' not in session or session['role'] != 'user':
@@ -201,7 +201,7 @@ def book_spot(lot_id):
 
     return "No available spots in this lot", 404
 
-# ------------------ Release Spot ------------------
+#  Release Spot
 @controller_bp.route('/release_spot', methods=['POST'])
 def release_spot():
     if 'role' not in session or session['role'] != 'user':
@@ -219,7 +219,7 @@ def release_spot():
 
     return redirect(url_for('controller.user_dashboard'))
 
-# ------------------ User Summary ------------------
+#  User Summary 
 @controller_bp.route('/user/summary')
 def user_summary():
     if 'role' not in session or session['role'] != 'user':
@@ -240,7 +240,7 @@ def user_summary():
 
     return render_template('user_summary.html', lot_names=lot_names, lot_hours=lot_hours)
 
-# ------------------ User History ------------------
+#  User History 
 @controller_bp.route('/user/history')
 def user_history():
     if 'role' not in session or session['role'] != 'user':
